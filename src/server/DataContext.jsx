@@ -1,4 +1,4 @@
-import  { createContext, useState } from "react";
+import { createContext, useState } from "react";
 import axios from "axios";
 
 export const DataContext = createContext();
@@ -8,6 +8,14 @@ export const DataProvider = ({ children }) => {
   const [nutrition, setNutrition] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  // Meals storage
+  const [meals, setMeals] = useState({
+    breakfast: [],
+    lunch: [],
+    snacks: [],
+    dinner: [],
+  });
 
   const API_URL = "https://api.calorieninjas.com/v1/nutrition?query=";
   const API_KEY = "YegAuUIuxfcx88TZ5wukMA==af02f5SK7MeiSzhh";
@@ -28,8 +36,6 @@ export const DataProvider = ({ children }) => {
       });
 
       if (response.data.items && response.data.items.length > 0) {
-        console.log(response.data);
-        
         setNutrition(response.data.items);
       } else {
         setError("No nutrition info found for this item.");
@@ -42,9 +48,26 @@ export const DataProvider = ({ children }) => {
     }
   };
 
+  // Add selected food into a meal
+  const addToMeal = (mealType, food) => {
+    setMeals((prev) => ({
+      ...prev,
+      [mealType]: [...prev[mealType], food],
+    }));
+  };
+
   return (
     <DataContext.Provider
-      value={{ query, setQuery, nutrition, loading, error, fetchNutrition }}
+      value={{
+        query,
+        setQuery,
+        nutrition,
+        loading,
+        error,
+        fetchNutrition,
+        meals,
+        addToMeal,
+      }}
     >
       {children}
     </DataContext.Provider>
