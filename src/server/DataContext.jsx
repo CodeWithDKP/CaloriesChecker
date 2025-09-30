@@ -55,6 +55,12 @@ export const DataProvider = ({ children }) => {
       [mealType]: [...prev[mealType], food],
     }));
   };
+  const [user, setUser] = useState(null); // null = not logged in
+
+  // fake login
+  const login = (username) => setUser({ name: username });
+  const logout = () => setUser(null);
+
 
   return (
     <DataContext.Provider
@@ -67,6 +73,9 @@ export const DataProvider = ({ children }) => {
         fetchNutrition,
         meals,
         addToMeal,
+        user,
+        login,
+        logout,
       }}
     >
       {children}

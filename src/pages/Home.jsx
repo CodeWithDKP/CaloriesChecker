@@ -9,7 +9,6 @@ function Home() {
 
   const [showPopup, setShowPopup] = useState(false);
   const [quantity, setQuantity] = useState(100); // default grams
-  const [selectedFood, setSelectedFood] = useState(null);
   const [mealChoice, setMealChoice] = useState("");
 
   const handleSearch = async () => {
@@ -29,14 +28,14 @@ function Home() {
     };
   };
 
-  const handleSave = () => {
+  // ✅ now accepts food item directly
+  const handleSave = (food) => {
     if (!mealChoice) {
       alert("Please select a meal type!");
       return;
     }
-    addToMeal(mealChoice, selectedFood);
+    addToMeal(mealChoice, food);
     setMealChoice("");
-    setSelectedFood(null);
     setShowPopup(false);
     alert("Food saved successfully ✅");
   };
@@ -101,6 +100,7 @@ function Home() {
                   <p><strong>Protein:</strong> {scaled.protein_g} g</p>
                   <p><strong>Fat:</strong> {scaled.fat_total_g} g</p>
                   <p><strong>Carbs:</strong> {scaled.carbohydrates_total_g} g</p>
+
                   <div className="meal-options">
                     <label>
                       <input
@@ -135,12 +135,11 @@ function Home() {
                       /> Dinner
                     </label>
                   </div>
+
+                  {/* ✅ Pass scaled food directly */}
                   <button
                     className="save-btn"
-                    onClick={() => {
-                      setSelectedFood(scaled);
-                      handleSave();
-                    }}
+                    onClick={() => handleSave(scaled)}
                   >
                     Save
                   </button>
